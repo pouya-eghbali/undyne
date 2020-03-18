@@ -1,4 +1,4 @@
-export default class Undyne {
+class Undyne {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
@@ -507,3 +507,5 @@ export default class Undyne {
     return Number(width.replace(/[a-z]+/gi, ""));
   }
 }
+
+module.exports = Undyne;
