@@ -92,7 +92,8 @@ class Undyne {
     const deltaCols = Math.floor(deltaY / this.lineHeight);
     const newScroll = deltaCols + this.scrollTop;
     if (newScroll < 0) return (this.scrollTop = 0);
-    const maxScroll = this.getLines().length - this.rows + 1;
+    const lines = this.getLines().length;
+    const maxScroll = lines - Math.min(lines, this.rows + 1);
     if (newScroll < maxScroll) this.scrollTop = newScroll;
     else this.scrollTop = maxScroll;
     this.clear();
