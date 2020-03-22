@@ -8,6 +8,7 @@ class Undyne {
     this.caretX = 0;
     this.caretY = 0;
     this.blinkIn = true;
+    this.makeInput();
     this.installEventHandlers();
     this.retina();
     this.render();
@@ -21,8 +22,14 @@ class Undyne {
     this.columns = this.getColumns();
     this.foreground = "#f8f8f2";
   }
+  makeInput() {
+    this.input = document.createElement("input");
+    this.input.setAttribute("type", "text");
+    this.input.style.transform = "translateX(-99999px) translateY(-99999px)";
+    document.body.append(this.input);
+  }
   focus() {
-    this.canvas.focus();
+    this.input.focus();
   }
   retina() {
     const widthAttr = this.canvas.getAttribute("width");
@@ -43,8 +50,8 @@ class Undyne {
   }
   installEventHandlers() {
     this.canvas.setAttribute("tabindex", "0");
-    this.canvas.focus();
-    this.canvas.addEventListener("keydown", event => this.onKeyDown(event));
+    this.focus();
+    this.input.addEventListener("keydown", event => this.onKeyDown(event));
     this.canvas.addEventListener("mousedown", event => this.onMouseDown(event));
     this.canvas.addEventListener("mouseup", event => this.onMouseUp(event));
     this.canvas.addEventListener("mousemove", event => this.onMouseMove(event));
