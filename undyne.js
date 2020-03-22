@@ -48,6 +48,9 @@ class Undyne {
     this.canvas.addEventListener("mousedown", event => this.onMouseDown(event));
     this.canvas.addEventListener("mouseup", event => this.onMouseUp(event));
     this.canvas.addEventListener("mousemove", event => this.onMouseMove(event));
+    this.canvas.addEventListener("touchstart", ev => this.onTouchStart(ev));
+    this.canvas.addEventListener("touchend", event => this.onTouchEnd(event));
+    this.canvas.addEventListener("touchmove", event => this.onTouchMove(event));
     this.canvas.addEventListener("wheel", event => this.onWheel(event));
     this.canvas.addEventListener("dblclick", event => this.onDblClick(event));
   }
@@ -57,6 +60,48 @@ class Undyne {
   }
   getLeftPad() {
     return this.getLines().length.toString().length + 3;
+  }
+  onTouchStart(event) {
+    event.preventDefault();
+    this.focus();
+    this.isDown = true;
+    const leftPad = this.getLeftPad() * this.charWidth;
+    const touch = event.touches[0];
+    this.downPos = {
+      x: touch.clientX - this.canvas.offsetLeft - leftPad,
+      y: touch.clientY - this.canvas.offsetTop
+    };
+    this.scrollTouch = event.touches.length > 1;
+  }
+  onTouchEnd(event) {
+    event.preventDefault();
+    this.isDown = false;
+    const leftPad = this.getLeftPad() * this.charWidth;
+    const touch = event.changedTouches[0];
+    this.upPos = {
+      x: touch.clientX - this.canvas.offsetLeft - leftPad,
+      y: touch.clientY - this.canvas.offsetTop
+    };
+    if (!this.scrollTouch)
+      if (this.downPos.x == this.upPos.x && this.downPos.y == this.upPos.y)
+        this.click();
+      else this.select();
+  }
+  onTouchMove(event) {
+    if (!this.isDown) return;
+    const leftPad = this.getLeftPad() * this.charWidth;
+    const touch = event.touches[0];
+    this.upPos = {
+      x: touch.clientX - this.canvas.offsetLeft - leftPad,
+      y: touch.clientY - this.canvas.offsetTop
+    };
+    if (!this.scrollTouch) {
+      this.select();
+      this.click(false);
+    } else {
+      this.scrollY(this.downPos.y - this.upPos.y);
+      this.scrollX(this.downPos.x - this.upPos.x);
+    }
   }
   onDblClick(event) {
     event.preventDefault();
