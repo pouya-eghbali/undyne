@@ -67,9 +67,10 @@ class Undyne {
     this.isDown = true;
     const leftPad = this.getLeftPad() * this.charWidth;
     const touch = event.touches[0];
+    const rect = this.canvas.getBoundingClientRect();
     this.downPos = {
-      x: touch.clientX - this.canvas.offsetLeft - leftPad,
-      y: touch.clientY - this.canvas.offsetTop
+      x: touch.clientX - rect.left - leftPad,
+      y: touch.clientY - rect.top
     };
     this.scrollTouch = event.touches.length > 1;
   }
@@ -78,9 +79,10 @@ class Undyne {
     this.isDown = false;
     const leftPad = this.getLeftPad() * this.charWidth;
     const touch = event.changedTouches[0];
+    const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
-      x: touch.clientX - this.canvas.offsetLeft - leftPad,
-      y: touch.clientY - this.canvas.offsetTop
+      x: touch.clientX - rect.left - leftPad,
+      y: touch.clientY - rect.top
     };
     if (!this.scrollTouch)
       if (this.downPos.x == this.upPos.x && this.downPos.y == this.upPos.y)
@@ -91,9 +93,10 @@ class Undyne {
     if (!this.isDown) return;
     const leftPad = this.getLeftPad() * this.charWidth;
     const touch = event.touches[0];
+    const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
-      x: touch.clientX - this.canvas.offsetLeft - leftPad,
-      y: touch.clientY - this.canvas.offsetTop
+      x: touch.clientX - rect.left - leftPad,
+      y: touch.clientY - rect.top
     };
     if (!this.scrollTouch) {
       this.select();
@@ -106,9 +109,10 @@ class Undyne {
   onDblClick(event) {
     event.preventDefault();
     const leftPad = this.getLeftPad();
+    const rect = this.canvas.getBoundingClientRect();
     const pos = {
-      x: event.clientX - this.canvas.offsetLeft - leftPad * this.charWidth,
-      y: event.clientY - this.canvas.offsetTop
+      x: event.clientX - rect.left - leftPad * this.charWidth,
+      y: event.clientY - rect.top
     };
     const lines = this.getLines()
       .slice(this.scrollTop)
@@ -159,18 +163,20 @@ class Undyne {
     this.focus();
     this.isDown = true;
     const leftPad = this.getLeftPad() * this.charWidth;
+    const rect = this.canvas.getBoundingClientRect();
     this.downPos = {
-      x: event.clientX - this.canvas.offsetLeft - leftPad,
-      y: event.clientY - this.canvas.offsetTop
+      x: event.clientX - rect.left - leftPad,
+      y: event.clientY - rect.top
     };
   }
   onMouseUp(event) {
     event.preventDefault();
     this.isDown = false;
     const leftPad = this.getLeftPad() * this.charWidth;
+    const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
-      x: event.clientX - this.canvas.offsetLeft - leftPad,
-      y: event.clientY - this.canvas.offsetTop
+      x: event.clientX - rect.left - leftPad,
+      y: event.clientY - rect.top
     };
     if (this.downPos.x == this.upPos.x && this.downPos.y == this.upPos.y)
       this.click();
@@ -179,9 +185,10 @@ class Undyne {
   onMouseMove(event) {
     if (!this.isDown) return;
     const leftPad = this.getLeftPad() * this.charWidth;
+    const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
-      x: event.clientX - this.canvas.offsetLeft - leftPad,
-      y: event.clientY - this.canvas.offsetTop
+      x: event.clientX - rect.left - leftPad,
+      y: event.clientY - rect.top
     };
     this.select();
     this.click(false);
