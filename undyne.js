@@ -26,10 +26,11 @@ class Undyne {
     this.input = document.createElement("input");
     this.input.setAttribute("type", "text");
     this.input.style.transform = "translateX(-99999px) translateY(-99999px)";
+    this.input.value = "X";
     document.body.append(this.input);
   }
   focus() {
-    this.input.focus();
+    this.input.focus({ preventScroll: true });
   }
   retina() {
     const widthAttr = this.canvas.getAttribute("width");
@@ -252,6 +253,13 @@ class Undyne {
   }
   onKeyDown(event) {
     event.preventDefault();
+    if (event.keyCode == 229) {
+      return setTimeout(() => {
+        const value = this.input.value.slice(1);
+        this.input.value = "X";
+        this.insertAtCaret(value);
+      }, 0);
+    }
     const { key } = event;
     const ignoreList = ["Shift", "Control", "Alt", "Meta"];
     if (key == "End") this.caretToEnd(event.shiftKey);
