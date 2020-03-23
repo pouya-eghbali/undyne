@@ -6,6 +6,10 @@ import prism from "prismjs";
 import loadLanguages from "prismjs/components/index";
 
 class PrismUndyne extends Undyne {
+  constructor(canvas) {
+    super(canvas);
+    this.fontFamily = "Fira Code";
+  }
   tokenize() {
     this.colorMap = this.colorMap || {};
     const flattenTokens = token =>
@@ -61,5 +65,11 @@ class PrismUndyne extends Undyne {
 }
 
 const canvas = document.getElementById("undyne");
+if (document.body.clientWidth < 992) {
+  const width = document.body.clientWidth - 64;
+  canvas.width = width;
+  canvas.setAttribute("width", width + "px");
+  canvas.style.width = width + "px";
+}
 const editor = new PrismUndyne(canvas);
 editor.content = fs.readFileSync("./undyne.js", { encoding: "utf8" });

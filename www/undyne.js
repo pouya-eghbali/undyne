@@ -16,7 +16,7 @@ class Undyne {
     this.fontSize = 16;
     this.lineSpacing = 2;
     this.lineHeight = this.fontSize + this.lineSpacing;
-    this.fontFamily = "FiraCode Nerd Font";
+    this.fontFamily = "monospace";
     this.charWidth = this.getCharWidth();
     this.rows = this.getRows();
     this.columns = this.getColumns();
@@ -30,7 +30,10 @@ class Undyne {
     document.body.append(this.input);
   }
   focus() {
+    const { scrollTop, scrollLeft } = document.scrollingElement;
     this.input.focus({ preventScroll: true });
+    document.scrollingElement.scrollTop = scrollTop;
+    document.scrollingElement.scrollLeft = scrollLeft;
   }
   retina() {
     const widthAttr = this.canvas.getAttribute("width");
@@ -291,7 +294,7 @@ class Undyne {
     navigator.clipboard.writeText(text);
   }
   paste() {
-    if (!this.selection) return;
+    if (this.selection) this.delete();
     navigator.clipboard.readText().then(text => this.insertAtCaret(text));
   }
   delete() {
@@ -323,7 +326,7 @@ class Undyne {
       return [firstLine, ...rest, lastLine].join("\n");
     }
   }
-  insertAtCaret(key) {
+  insertAtCaret(str) {
     const hasSelection = !!this.selection;
     this.delete();
     const lines = this.getLines();
@@ -332,13 +335,13 @@ class Undyne {
     const post = lines.slice(this.caretY + 1);
     const left = curr.slice(0, this.caretX);
     const right = curr.slice(this.caretX);
-    if (key == "Enter") {
+    if (str == "Enter") {
       this.content = [...pre, left, right, ...post].join("\n");
       this.moveCaret(-this.caretX, 1);
-    } else if (key == "Tab") {
+    } else if (str == "Tab") {
       this.content = [...pre, left + "  " + right, ...post].join("\n");
       this.moveCaret(2, 0);
-    } else if (key == "Backspace") {
+    } else if (str == "Backspace") {
       if (hasSelection) return;
       if (!left.length) {
         const lastOfPre = pre.pop() || "";
@@ -349,8 +352,8 @@ class Undyne {
         this.moveCaret(-1, 0);
       }
     } else {
-      this.content = [...pre, left + key + right, ...post].join("\n");
-      this.moveCaret(1, 0);
+      this.content = [...pre, left + str + right, ...post].join("\n");
+      this.moveCaret(str.length, 0);
     }
     this.clear();
     this.render();
