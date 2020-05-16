@@ -21,6 +21,7 @@ class Undyne {
     this.rows = this.getRows();
     this.columns = this.getColumns();
     this.foreground = "#f8f8f2";
+    this.selectColor = "rgba(68, 71, 90, 1)";
   }
   makeInput() {
     this.input = document.createElement("input");
@@ -447,7 +448,7 @@ class Undyne {
     const deltaX = this.scrollLeft;
     const deltaY = this.scrollTop;
     this.ctx.save();
-    this.ctx.fillStyle = "rgba(68, 71, 90, 1)";
+    this.ctx.fillStyle = this.selectColor;
     if (startY == endY) {
       this.ctx.fillRect(
         (startX - deltaX + leftPad) * this.charWidth,
