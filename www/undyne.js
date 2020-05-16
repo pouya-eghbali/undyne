@@ -47,23 +47,29 @@ class Undyne {
     this.ctx.scale(0.5, 0.5);
   }
   getColumns() {
-    return Math.ceil(this.canvas.width / 2 / this.charWidth);
+    return Math.floor(this.canvas.width / 2 / this.charWidth);
   }
   getRows() {
-    return Math.ceil(this.canvas.height / 2 / this.lineHeight);
+    return Math.floor(this.canvas.height / 2 / this.lineHeight);
   }
   installEventHandlers() {
     this.canvas.setAttribute("tabindex", "0");
     this.focus();
-    this.input.addEventListener("keydown", event => this.onKeyDown(event));
-    this.canvas.addEventListener("mousedown", event => this.onMouseDown(event));
-    this.canvas.addEventListener("mouseup", event => this.onMouseUp(event));
-    this.canvas.addEventListener("mousemove", event => this.onMouseMove(event));
-    this.canvas.addEventListener("touchstart", ev => this.onTouchStart(ev));
-    this.canvas.addEventListener("touchend", event => this.onTouchEnd(event));
-    this.canvas.addEventListener("touchmove", event => this.onTouchMove(event));
-    this.canvas.addEventListener("wheel", event => this.onWheel(event));
-    this.canvas.addEventListener("dblclick", event => this.onDblClick(event));
+    this.input.addEventListener("keydown", (event) => this.onKeyDown(event));
+    this.canvas.addEventListener("mousedown", (event) =>
+      this.onMouseDown(event)
+    );
+    this.canvas.addEventListener("mouseup", (event) => this.onMouseUp(event));
+    this.canvas.addEventListener("mousemove", (event) =>
+      this.onMouseMove(event)
+    );
+    this.canvas.addEventListener("touchstart", (ev) => this.onTouchStart(ev));
+    this.canvas.addEventListener("touchend", (event) => this.onTouchEnd(event));
+    this.canvas.addEventListener("touchmove", (event) =>
+      this.onTouchMove(event)
+    );
+    this.canvas.addEventListener("wheel", (event) => this.onWheel(event));
+    this.canvas.addEventListener("dblclick", (event) => this.onDblClick(event));
   }
   onWheel(event) {
     const { deltaY } = event;
@@ -81,7 +87,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.downPos = {
       x: touch.clientX - rect.left - leftPad,
-      y: touch.clientY - rect.top
+      y: touch.clientY - rect.top,
     };
     this.scrollTouch = event.touches.length > 1;
   }
@@ -93,7 +99,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
       x: touch.clientX - rect.left - leftPad,
-      y: touch.clientY - rect.top
+      y: touch.clientY - rect.top,
     };
     if (!this.scrollTouch)
       if (this.downPos.x == this.upPos.x && this.downPos.y == this.upPos.y)
@@ -107,7 +113,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
       x: touch.clientX - rect.left - leftPad,
-      y: touch.clientY - rect.top
+      y: touch.clientY - rect.top,
     };
     if (!this.scrollTouch) {
       this.select();
@@ -123,11 +129,9 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     const pos = {
       x: event.clientX - rect.left - leftPad * this.charWidth,
-      y: event.clientY - rect.top
+      y: event.clientY - rect.top,
     };
-    const lines = this.getLines()
-      .slice(this.scrollTop)
-      .slice(0, this.rows);
+    const lines = this.getLines().slice(this.scrollTop).slice(0, this.rows);
     const rowAtY = Math.floor(pos.y / this.lineHeight);
     const colAtX = Math.floor(pos.x / this.charWidth);
     const lineAtY = lines[rowAtY];
@@ -143,7 +147,7 @@ class Undyne {
       startX: firstWordStart,
       endX: firstWordEnd,
       startY: rowAtY,
-      endY: rowAtY
+      endY: rowAtY,
     };
     this.clear();
     this.render();
@@ -153,7 +157,7 @@ class Undyne {
     const newScroll = deltaCols + this.scrollTop;
     if (newScroll < 0) return (this.scrollTop = 0);
     const lines = this.getLines().length;
-    const maxScroll = lines - Math.min(lines, this.rows + 1);
+    const maxScroll = lines - Math.min(lines, this.rows);
     if (newScroll < maxScroll) this.scrollTop = newScroll;
     else this.scrollTop = maxScroll;
     this.clear();
@@ -177,7 +181,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.downPos = {
       x: event.clientX - rect.left - leftPad,
-      y: event.clientY - rect.top
+      y: event.clientY - rect.top,
     };
   }
   onMouseUp(event) {
@@ -187,7 +191,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
       x: event.clientX - rect.left - leftPad,
-      y: event.clientY - rect.top
+      y: event.clientY - rect.top,
     };
     if (this.downPos.x == this.upPos.x && this.downPos.y == this.upPos.y)
       this.click();
@@ -199,7 +203,7 @@ class Undyne {
     const rect = this.canvas.getBoundingClientRect();
     this.upPos = {
       x: event.clientX - rect.left - leftPad,
-      y: event.clientY - rect.top
+      y: event.clientY - rect.top,
     };
     this.select();
     this.click(false);
@@ -222,7 +226,7 @@ class Undyne {
       startY: Math.floor(this.downPos.y / this.lineHeight) + this.scrollTop,
       endX:
         Math.floor((this.upPos.x - leftPad) / this.charWidth) + this.scrollLeft,
-      endY: Math.floor(this.upPos.y / this.lineHeight) + this.scrollTop
+      endY: Math.floor(this.upPos.y / this.lineHeight) + this.scrollTop,
     };
     const { endY, startY, endX, startX } = selection;
     this.upDownSelection = true;
@@ -295,7 +299,7 @@ class Undyne {
   }
   paste() {
     if (this.selection) this.delete();
-    navigator.clipboard.readText().then(text => this.insertAtCaret(text));
+    navigator.clipboard.readText().then((text) => this.insertAtCaret(text));
   }
   delete() {
     if (!this.selection) return;
@@ -483,7 +487,7 @@ class Undyne {
     const lineNumberMaxWidth = this.getLines().length.toString().length;
     const tokens = this.tokenize();
     const visibleTokenLines = tokens.slice(this.scrollTop).slice(0, this.rows);
-    const tokenLinesToDraw = visibleTokenLines.map(line => {
+    const tokenLinesToDraw = visibleTokenLines.map((line) => {
       let removed = 0;
       while (true) {
         const token = line.shift();
@@ -494,7 +498,7 @@ class Undyne {
         }
         line.unshift({
           ...token,
-          content: token.content.slice(this.scrollLeft - removed)
+          content: token.content.slice(this.scrollLeft - removed),
         });
         break;
       }
@@ -530,10 +534,10 @@ class Undyne {
     this.ctx.restore();
   }
   tokenize() {
-    return this.getLines().map(line => {
-      return line.split(" ").map(token => {
+    return this.getLines().map((line) => {
+      return line.split(" ").map((token) => {
         return {
-          content: token + " "
+          content: token + " ",
         };
       });
     });
